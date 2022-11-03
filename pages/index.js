@@ -1,7 +1,22 @@
 import Head from 'next/head';
+import { useState } from 'react';
 import Nav from '../components/Nav';
+import { createTrack } from '../components/services';
 
 export default function Home() {
+	const [description, setDescription] = useState('');
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		createTrack(description)
+			.then((resp) => {
+				alert('Tracker created successfully!');
+				setDescription('');
+			})
+			.catch((e) => {
+				alert('Error creating tracker!');
+			});
+	};
 	return (
 		<div>
 			<Head>
@@ -20,7 +35,7 @@ export default function Home() {
 						<div className='border-b h-8 mb-4'>
 							<h3 className='text-gray-700'>Gym Tracker</h3>
 						</div>
-						<form action=''>
+						<form onSubmit={handleSubmit}>
 							<fieldset>
 								<label className='text-sm text-gray-400 mb-2 block'>
 									Description
@@ -29,7 +44,12 @@ export default function Home() {
 									name=''
 									id=''
 									rows='5'
-									className='border w-full rounded-sm mb-6'
+									className='border w-full rounded-sm mb-6 p-2'
+									required
+									value={description}
+									onChange={(e) =>
+										setDescription(e.target.value)
+									}
 								/>
 							</fieldset>
 							<button className='text-sm text-white px-8 py-2 rounded-sm bg-teal-600 hover:bg-teal-700'>

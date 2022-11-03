@@ -1,7 +1,8 @@
 import Head from 'next/head';
 import Nav from '../components/Nav';
+import { getTrackers } from '../components/services';
 
-export default function History() {
+export default function History({ data }) {
 	return (
 		<div>
 			<Head>
@@ -21,49 +22,37 @@ export default function History() {
 							<h3 className='text-gray-700'>History</h3>
 						</div>
 						<ul>
-							<li className='h-auto border rounded-sm px-4 py-2 mb-2'>
-								<p className='text-sm text-gray-500 mb-2'>
-									Lorem ipsum dolor sit amet, consectetur
-									adipisicing elit. Repellendus illo deleniti
-									voluptas placeat, id dicta, alias ut eos
-									quidem necessitatibus omnis est minus nisi.
-									Placeat voluptas repellendus culpa
-									praesentium iste!
+							{data.records.length > 0 ? (
+								data.records.map((record) => (
+									<li
+										key={record.id}
+										className='h-auto border rounded-sm px-4 py-2 mb-2'
+									>
+										<p className='text-sm text-gray-500 mb-2'>
+											{record.description}
+										</p>
+										<p className='text-xs text-gray-500 mb-2'>
+											{record.created_on.slice(0, 10)}
+										</p>
+									</li>
+								))
+							) : (
+								<p className='text-sm text-gray-500 mb-2 text-center'>
+									You currently do not have any data in your
+									tracker!.
 								</p>
-								<p className='text-xs text-gray-500 mb-2'>
-									2022 -04 - 09
-								</p>
-							</li>
-							<li className='h-auto border rounded-sm px-4 py-2 mb-2'>
-								<p className='text-sm text-gray-500 mb-2'>
-									Lorem ipsum dolor sit amet, consectetur
-									adipisicing elit. Repellendus illo deleniti
-									voluptas placeat, id dicta, alias ut eos
-									quidem necessitatibus omnis est minus nisi.
-									Placeat voluptas repellendus culpa
-									praesentium iste!
-								</p>
-								<p className='text-xs text-gray-500 mb-2'>
-									2022 -04 - 09
-								</p>
-							</li>
-							<li className='h-auto border rounded-sm px-4 py-2 mb-2'>
-								<p className='text-sm text-gray-500 mb-2'>
-									Lorem ipsum dolor sit amet, consectetur
-									adipisicing elit. Repellendus illo deleniti
-									voluptas placeat, id dicta, alias ut eos
-									quidem necessitatibus omnis est minus nisi.
-									Placeat voluptas repellendus culpa
-									praesentium iste!
-								</p>
-								<p className='text-xs text-gray-500 mb-2'>
-									2022 -04 - 09
-								</p>
-							</li>
+							)}
 						</ul>
 					</div>
 				</section>
 			</main>
 		</div>
 	);
+}
+
+export async function getServerSideProps() {
+	const response = await getTrackers().then((resp) => resp);
+	const data = await response.json();
+
+	return { props: { data } };
 }
