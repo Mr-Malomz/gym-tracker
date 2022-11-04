@@ -2,6 +2,13 @@ import Head from 'next/head';
 import Nav from '../components/Nav';
 import { getTrackers } from '../components/services';
 
+export async function getServerSideProps() {
+	const response = await getTrackers().then((resp) => resp);
+	const data = await response.json();
+
+	return { props: { data } };
+}
+
 export default function History({ data }) {
 	return (
 		<div>
@@ -48,11 +55,4 @@ export default function History({ data }) {
 			</main>
 		</div>
 	);
-}
-
-export async function getServerSideProps() {
-	const response = await getTrackers().then((resp) => resp);
-	const data = await response.json();
-
-	return { props: { data } };
 }
