@@ -5,16 +5,20 @@ import { createTrack } from '../components/services';
 
 export default function Home() {
 	const [description, setDescription] = useState('');
+	const [isLoading, setIsloading] = useState(false);
 
 	const handleSubmit = (e) => {
+		setIsloading(true);
 		e.preventDefault();
 		createTrack(description)
 			.then((resp) => {
 				alert('Tracker created successfully!');
 				setDescription('');
+				setIsloading(false);
 			})
 			.catch((e) => {
 				alert('Error creating tracker!');
+				setIsloading(false);
 			});
 	};
 	return (
@@ -52,7 +56,10 @@ export default function Home() {
 									}
 								/>
 							</fieldset>
-							<button className='text-sm text-white px-8 py-2 rounded-sm bg-teal-600 hover:bg-teal-700'>
+							<button
+								className='text-sm text-white px-8 py-2 rounded-sm bg-teal-600 hover:bg-teal-700'
+								disabled={isLoading}
+							>
 								Submit
 							</button>
 						</form>
